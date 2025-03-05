@@ -3,15 +3,15 @@ import { Client, Account, ID, Databases, Storage } from 'appwrite';
 const client = new Client();
 
 client
-    .setEndpoint('https://cloud.appwrite.io/v1') 
-    .setProject('67c467cc0016f620a606'); 
+    .setEndpoint('https://in-mumbai-1.inpharmaco.in/v1') 
+    .setProject('67b354920017541b6db4'); 
 
 const account = new Account(client);
 const databases = new Databases(client);
 const storage = new Storage(client);
 
-const DATABASE_ID = "67c5501c00283601a5cc";
-const COLLECTION_ID = "67c55092000c2fdbb64c";
-const STORAGE_BUCKET_ID = "67c5871f0006cdd93bdc";
+const DATABASE_ID = "67c85f930035b55c32a1";
+const COLLECTION_ID = "67c8614c0014b9de23f8";
+const STORAGE_BUCKET_ID = "67c861740032a75809b9";
 
 export { client, account, databases, storage, ID, DATABASE_ID, COLLECTION_ID, STORAGE_BUCKET_ID };

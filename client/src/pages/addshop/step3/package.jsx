@@ -11,7 +11,6 @@ const Package = () => {
   const [referralCode, setReferralCode] = useState("");
 
   const navigate = useNavigate();
-  
 
   const [selectedPlan, setSelectedPlan] = useState({
     planName: 'Basic',
@@ -67,12 +66,13 @@ const Package = () => {
   
       const response = await databases.createDocument(
         DATABASE_ID,
-        '67c5e34f002f6b49f102',
+        '67c862880039ba8d928a',
         ID.unique(),
         {
           userId,
           planName: selectedPlan.planName,
-          price: priceValue  
+          price: priceValue,
+          referralCode: referralCode
         }
       );
   

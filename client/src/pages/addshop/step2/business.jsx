@@ -56,7 +56,7 @@ const Business = () => {
 
       const response = await databases.createDocument(
         DATABASE_ID,
-        '67c58652003232442687',
+        '67c862750028167dd88b',
         ID.unique(),
         {
           userId,

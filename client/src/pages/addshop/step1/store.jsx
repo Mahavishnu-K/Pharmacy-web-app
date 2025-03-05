@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { databases, ID, account } from './../../../../../server/src/appwriteConfig';
+import { databases, DATABASE_ID, ID, account } from './../../../../../server/src/appwriteConfig';
 import './store.css';
 
 const Store = () => {
@@ -55,8 +55,8 @@ const Store = () => {
   
       
       const response = await databases.createDocument(
-        '67c5501c00283601a5cc',
-        '67c570d6003442c841e6', 
+        DATABASE_ID,
+        '67c86263003c960b56ed', 
         ID.unique(),
         shopData
       );
