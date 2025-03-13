@@ -54,10 +54,10 @@ const Payment = () => {
             </div>
         </div>
         <div className="progress-container-text">
-            <span className="step-label" >Store Details</span>
-            <span className="step-label" style={{marginLeft:"5px"}}>Business Details</span>
-            <span className="step-label">Package Selection</span>
-            <span className="step-label" style={{marginTop:"-9px"}}>Payment</span>
+          <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
+          <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
+          <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
+          <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
         </div>
 
         <div className="payment-container">

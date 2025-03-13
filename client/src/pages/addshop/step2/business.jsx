@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { FiUpload, FiX } from "react-icons/fi";
-import { databases, account, storage, ID, DATABASE_ID, STORAGE_BUCKET_ID } from '../../../../../server/src/appwriteConfig';
+import { AiTwotoneDelete } from "react-icons/ai";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { Toaster, toast } from 'sonner';
+import { databases, account, storage, ID, DATABASE_ID, STORAGE_BUCKET_ID, Query } from '../../../../../server/src/appwriteConfig';
+import { encryptData, decryptData } from '../../../utils/encryption';
 import './business.css';
 
 const Business = () => {
@@ -11,40 +15,102 @@ const Business = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const [initialData, setInitialData] = useState(null);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [documentId, setDocumentId] = useState(null);
+  const [isDocumentSubmitted, setIsDocumentSubmitted] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedData = sessionStorage.getItem('businessData');
+    if (savedData) {
+      const decryptedData = decryptData(savedData);
+      if (decryptedData) {
+        setGstNumber(decryptedData.gstNumber || '');
+        setInitialData(decryptedData);
+        setIsDocumentSubmitted(true);
+      }
+    }
+
+    const fetchExistingDocument = async () => {
+      try {
+        const user = await account.get();
+        const userId = user.$id;
+
+        if (!userId) {
+          console.log("User not logged in!");
+          return;
+        }
+
+        const response = await databases.listDocuments(
+          DATABASE_ID,
+          '67c862750028167dd88b', 
+          [Query.equal('userId', [userId])]
+        );
+
+        if (response.documents.length > 0) {
+          const existingDocument = response.documents[0];
+          setDocumentId(existingDocument.$id);
+
+          if (existingDocument.fileId) {
+            setIsDocumentSubmitted(true); 
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching existing document:", err);
+      }
+    };
+
+    fetchExistingDocument();
+  }, []);
 
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
       setFile(e.target.files[0]);
+      setHasChanges(true);
     }
   };
 
   const handleCancelFile = () => {
     setFile(null);
+    setHasChanges(true);
+  };
+
+  const handleSubmittedCancelFile = () => {
+    setIsDocumentSubmitted(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isDocumentSubmitted && !hasChanges) {
+      navigate('/package');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     const user = await account.get();
-    const userId = user.$id; 
+    const userId = user.$id;
 
     if (!userId) {
-      alert("User not logged in!");
       return;
     }
 
     try {
-      let fileId = null;
-      let fileUrl = null;
+      let fileId = initialData?.fileId || null;
+      let fileUrl = initialData?.fileUrl || null;
 
       if (file) {
+        if (documentId && initialData?.fileId) {
+          await storage.deleteFile(STORAGE_BUCKET_ID, initialData.fileId);
+          console.log("Existing file deleted:", initialData.fileId);
+        }
+
         const fileUploadResponse = await storage.createFile(
           STORAGE_BUCKET_ID,
-          ID.unique(), 
+          ID.unique(),
           file
         );
         fileId = fileUploadResponse.$id;
@@ -54,9 +120,20 @@ const Business = () => {
         console.log('File URL:', fileUrl);
       }
 
+      const businessData = { gstNumber, fileId, fileUrl };
+
+      if (documentId) {
+        await databases.deleteDocument(
+          DATABASE_ID,
+          '67c862750028167dd88b',
+          documentId
+        );
+        console.log("Existing document deleted:", documentId);
+      }
+
       const response = await databases.createDocument(
         DATABASE_ID,
-        '67c862750028167dd88b',
+        '67c862750028167dd88b', 
         ID.unique(),
         {
           userId,
@@ -67,18 +144,26 @@ const Business = () => {
       );
 
       console.log('Business details saved:', response);
-      alert('Business details saved successfully!');
+      sessionStorage.setItem('businessData', encryptData(businessData));
+      setInitialData(businessData);
+      setHasChanges(false);
+      setIsDocumentSubmitted(true); 
       navigate('/package');
     } catch (err) {
+      toast.error('Error');
       setError('Failed to save business details.');
       console.error('Error:', err);
+    } finally {
+      toast.success('Saved');
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="container">
+
+      <Toaster position="bottom-center" />
+
       <div className="header">
         <h1 className="title">Business Details</h1>
         <div className="spacer"></div>
@@ -94,9 +179,9 @@ const Business = () => {
         <div className="step-item"><div className="step-circle">4</div></div>
       </div>
       <div className="progress-container-text">
-        <span className="step-label">Store Details</span>
+        <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
         <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
-        <span className="step-label">Package Selection</span>
+        <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
         <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
       </div>
 
@@ -123,7 +208,30 @@ const Business = () => {
               Drug License Upload <span className="required">*</span>
             </label>
             <div className="upload-container">
-              {!file ? (
+              {isDocumentSubmitted && !file ? (
+                <div className="submitted-document">
+                  <div className="submitted-message">
+                    Document Submitted<pre> </pre><IoCheckmarkCircleSharp style={{color:"#2196f3"}} size={24}/>
+                  </div>
+                   <div className="file-submitted-actions">
+                    <label htmlFor="replace-file" className="replace-file-btn">Choose another file</label>
+                    <input
+                      type="file"
+                      id="replace-file"
+                      onChange={handleFileChange}
+                      className="hidden-input"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                    />
+                    <button 
+                      type="button" 
+                      className="cancel-file-btn"
+                      onClick={handleSubmittedCancelFile}
+                    >
+                      <AiTwotoneDelete size={17} />
+                    </button>
+                  </div>
+                </div>
+              ) : !file ? (
                 <>
                   <input
                     type="file"
@@ -159,7 +267,7 @@ const Business = () => {
                     </div>
                   </div>
                   <div className="file-actions">
-                    <label htmlFor="replace-file" className="replace-file-btn">Choose another</label>
+                    <label htmlFor="replace-file" className="replace-file-btn">Choose another file</label>
                     <input
                       type="file"
                       id="replace-file"
@@ -172,7 +280,7 @@ const Business = () => {
                       className="cancel-file-btn"
                       onClick={handleCancelFile}
                     >
-                      <FiX size={16} />
+                      <AiTwotoneDelete size={17} />
                     </button>
                   </div>
                 </div>

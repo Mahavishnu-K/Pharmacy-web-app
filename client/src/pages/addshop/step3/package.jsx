@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { databases, account, ID, DATABASE_ID } from '../../../../../server/src/appwriteConfig';
+import { Toaster, toast } from 'sonner';
+import { databases, account, DATABASE_ID, COLLECTION_ID, Query } from '../../../../../server/src/appwriteConfig';
+import { encryptData, decryptData } from '../../../utils/encryption';
 
 import './package.css';
 
@@ -17,6 +19,9 @@ const Package = () => {
     price: '₹50',
     features: 'Patient Management | Appointment Scheduling | Basic Reports'
   });
+  const [initialData, setInitialData] = useState(null);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [documentId, setDocumentId] = useState(null);
   
   const plans = [
     {
@@ -39,61 +44,114 @@ const Package = () => {
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
     setShowOverlay(false);
+    setHasChanges(true);
+    sessionStorage.setItem("selectedPlan", encryptData(plan));
   };
 
+  const handleReferralChange = (e) => {
+    setReferralCode(e.target.value);
+    setHasChanges(true);
+    sessionStorage.setItem("referralCode", encryptData(e.target.value));
+  };
+
+  useEffect(() => {
+    const storedPlan = sessionStorage.getItem("selectedPlan");
+    const storedReferral = sessionStorage.getItem("referralCode");
+
+    if (storedPlan) {
+      setSelectedPlan(decryptData(storedPlan));
+      setInitialData(decryptData(storedPlan));
+    }
+
+    if (storedReferral) {
+      setReferralCode(decryptData(storedReferral));
+    }
+
+    const fetchExistingDocument = async () => {
+      try {
+        const user = await account.get();
+        const userId = user.$id;
+
+        if (!userId) {
+          console.log("User not logged in!");
+          return;
+        }
+
+        const response = await databases.listDocuments(
+          DATABASE_ID,
+          COLLECTION_ID, 
+          [Query.equal('userId', [userId])]
+        );
+
+        if (response.documents.length > 0) {
+          setDocumentId(response.documents[0].$id); 
+        }
+      } catch (err) {
+        console.error("Error fetching existing document:", err);
+      }
+    };
+
+    fetchExistingDocument();
+  }, []);
+  
   const handleOverlayClick = (e) => {
     if (e.target.className === 'overlay') {
       setShowOverlay(false);
     }
   };
 
-  const [formData, setFormData] = useState({});
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const user = await account.get();
-    const userId = user.$id; 
-
-    if (!userId) {
-      alert("User not logged in!");
+    if (!hasChanges && initialData) {
+      navigate('/payment');
       return;
     }
-  
+
+    const user = await account.get();
+    const userId = user.$id;
+
+    if (!userId) {
+      return;
+    }
+
     try {
-  
       const priceValue = parseInt(selectedPlan.price.replace('₹', '').trim());
-  
-      const response = await databases.createDocument(
+
+      const response = await databases.updateDocument(
         DATABASE_ID,
-        '67c862880039ba8d928a',
-        ID.unique(),
+        COLLECTION_ID, 
+        documentId,
         {
-          userId,
           planName: selectedPlan.planName,
           price: priceValue,
           referralCode: referralCode
         }
       );
-  
+
       console.log('Package saved:', response);
-      alert('Package details saved successfully!');
+      setInitialData({ selectedPlan, referralCode });
+      setHasChanges(false);
+      setDocumentId(response.$id); 
       navigate('/payment');
     } catch (error) {
+      toast.error('Error');
       console.error('Error saving package details:', error);
-      alert('Failed to save package details.');
+    } finally {
+      toast.success('Proceed to pay');
     }
   };
   
   return (
     <div className="container">
+
+      <Toaster position="bottom-center" />
       
       <div className="header">
         <h1 className="title">Add Shop</h1>
         <div className="spacer"></div>
       </div>
 
-      {/* Progress Steps */}
         <div className="progress-container">
             <div className="step-item">
                 <div className="step-circle active">1</div>
@@ -124,10 +182,10 @@ const Package = () => {
             </div>
         </div>
         <div className="progress-container-text-pack">
-            <span className="step-label" >Store Details</span>
-            <span className="step-label" style={{marginLeft:"5px"}}>Business Details</span>
-            <span className="step-label">Package Selection</span>
-            <span className="step-label" style={{marginTop:"-9px"}}>Payment</span>
+          <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
+          <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
+          <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
+          <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
         </div>
 
       
@@ -162,7 +220,7 @@ const Package = () => {
               id="referralCode"
               className="referral-input"
               value={referralCode}
-              onChange={(e) => setReferralCode(e.target.value)}
+              onChange={handleReferralChange}
               placeholder="Enter referral code"
             />
           </div>

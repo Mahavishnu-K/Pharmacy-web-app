@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { databases, DATABASE_ID, ID, account } from './../../../../../server/src/appwriteConfig';
+import { Toaster, toast } from 'sonner';
+import { databases, DATABASE_ID, ID, account, Query } from './../../../../../server/src/appwriteConfig';
+import { encryptData, decryptData } from '../../../utils/encryption';
 import './store.css';
 
 const Store = () => {
+
+  const [initialData, setInitialData] = useState(null);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [documentId, setDocumentId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,23 +33,66 @@ const Store = () => {
       ...prevState,
       [name]: value
     }));
+    setHasChanges(true);
   };
+
+  useEffect(() => {
+    const storedData = sessionStorage.getItem("shopData");
+    if (storedData) {
+      const decryptedData = decryptData(storedData);
+      if (decryptedData) {
+        setFormData(decryptedData);
+        setInitialData(decryptedData);
+      }
+    }
+
+    const fetchExistingDocument = async () => {
+      try {
+        const user = await account.get();
+        const userId = user.$id;
+
+        if (!userId) {
+          console.log("User not logged in!");
+          return;
+        }
+
+        const response = await databases.listDocuments(
+          DATABASE_ID,
+          '67c86263003c960b56ed', 
+          [Query.equal('userId', [userId])]
+        );
+
+        if (response.documents.length > 0) {
+          setDocumentId(response.documents[0].$id); 
+        }
+      } catch (err) {
+        console.error("Error fetching existing document:", err);
+      }
+    };
+
+    fetchExistingDocument();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    if (!hasChanges && initialData) {
+      navigate('/business');
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      
       const user = await account.get();
-      const userId = user.$id; 
-  
+      const userId = user.$id;
+
       if (!userId) {
-        alert("User not logged in!");
         return;
       }
-  
+
       const shopData = {
-        userId, 
+        userId,
         shopName: formData.shopName,
         shopNumber: formData.shopNumber,
         streetName: formData.streetName,
@@ -52,28 +102,44 @@ const Store = () => {
         state: formData.state,
         country: formData.country,
       };
-  
-      
+
+      if (documentId) {
+        await databases.deleteDocument(
+          DATABASE_ID,
+          '67c86263003c960b56ed',
+          documentId
+        );
+        console.log("Existing document deleted:", documentId);
+      }
+
       const response = await databases.createDocument(
         DATABASE_ID,
         '67c86263003c960b56ed', 
         ID.unique(),
         shopData
       );
-  
+
       console.log("Shop data stored:", response);
-      alert("Shop data saved successfully!");
+      sessionStorage.setItem("shopData", encryptData(shopData));
+      setInitialData(shopData);
+      setHasChanges(false);
+      setDocumentId(response.$id); 
       navigate('/business');
     } catch (err) {
+      toast.error('Error');
       console.error("Error storing shop data:", err);
-      alert("Failed to save shop data!");
+    } finally {
+      toast.success('Saved');
+      setLoading(false);
     }
   };
   
 
   return (
     <div className="container">
-      
+
+      <Toaster position="bottom-center" />
+
       <div className="header">
         <div className="back-button-signup" onClick={() => navigate('/')}>
           <MdOutlineKeyboardBackspace size={24} />
@@ -108,13 +174,12 @@ const Store = () => {
       </div>
 
       <div className="progress-container-text">
-        <span className="step-label">Store Details</span>
+        <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
         <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
-        <span className="step-label">Package Selection</span>
+        <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
         <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label className="form-label">
@@ -233,7 +298,7 @@ const Store = () => {
 
         <div className="button-container">
         <button type="submit" className="next-button">
-          Next <IoIosArrowRoundForward size={24} className="arrow-icon" />
+          {loading ? 'Saving...' : 'Next'} <IoIosArrowRoundForward size={28} />
         </button>
         </div>
       </form>
