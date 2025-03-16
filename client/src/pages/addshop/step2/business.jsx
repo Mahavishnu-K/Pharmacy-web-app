@@ -5,15 +5,14 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import { FiUpload, FiX } from "react-icons/fi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
-import { Toaster, toast } from 'sonner';
-import { databases, account, storage, ID, DATABASE_ID, STORAGE_BUCKET_ID, Query } from '../../../../../server/src/appwriteConfig';
+import { toast } from 'react-hot-toast';
+import { databases, account, storage, ID, DATABASE_ID, STORAGE_BUCKET_ID, Query } from './../../../../appwriteConfig';
 import { encryptData, decryptData } from '../../../utils/encryption';
 import './business.css';
 
 const Business = () => {
   const [gstNumber, setGstNumber] = useState('');
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [initialData, setInitialData] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
@@ -88,7 +87,6 @@ const Business = () => {
       return;
     }
 
-    setLoading(true);
     setError('');
 
     const user = await account.get();
@@ -148,21 +146,22 @@ const Business = () => {
       setInitialData(businessData);
       setHasChanges(false);
       setIsDocumentSubmitted(true); 
-      navigate('/package');
+
+      toast.success('Saved successfully');
+
+      setTimeout(() => {
+        navigate('/package');
+      }, 3000);
+
     } catch (err) {
-      toast.error('Error');
+      toast.error('Failed to save');
       setError('Failed to save business details.');
       console.error('Error:', err);
-    } finally {
-      toast.success('Saved');
-      setLoading(false);
     }
   };
 
   return (
     <div className="container">
-
-      <Toaster position="bottom-center" />
 
       <div className="header">
         <h1 className="title">Business Details</h1>
@@ -298,7 +297,7 @@ const Business = () => {
             </button>
           </Link>
           <button type="submit" className="next-button">
-            {loading ? 'Saving...' : 'Next'} <IoIosArrowRoundForward size={28} />
+              Next <IoIosArrowRoundForward size={28} />
           </button>
         </div>
       </form>

@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { Toaster, toast } from 'sonner';
-import { databases, DATABASE_ID, ID, account, Query } from './../../../../../server/src/appwriteConfig';
+import { toast } from 'react-hot-toast';
+import { databases, DATABASE_ID, ID, account, Query } from './../../../../appwriteConfig';
 import { encryptData, decryptData } from '../../../utils/encryption';
 import './store.css';
 
 const Store = () => {
-
   const [initialData, setInitialData] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [documentId, setDocumentId] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -81,13 +79,12 @@ const Store = () => {
       return;
     }
 
-    setLoading(true);
-
     try {
       const user = await account.get();
       const userId = user.$id;
 
       if (!userId) {
+        toast.error('User not logged in');
         return;
       }
 
@@ -123,22 +120,22 @@ const Store = () => {
       sessionStorage.setItem("shopData", encryptData(shopData));
       setInitialData(shopData);
       setHasChanges(false);
-      setDocumentId(response.$id); 
-      navigate('/business');
+      setDocumentId(response.$id);
+      
+      toast.success('Saved successfully');
+      
+      setTimeout(() => {
+        navigate('/business');
+      }, 3000);
+      
     } catch (err) {
-      toast.error('Error');
       console.error("Error storing shop data:", err);
-    } finally {
-      toast.success('Saved');
-      setLoading(false);
+      toast.error('Failed to save');
     }
   };
   
-
   return (
     <div className="container">
-
-      <Toaster position="bottom-center" />
 
       <div className="header">
         <div className="back-button-signup" onClick={() => navigate('/')}>
@@ -148,7 +145,6 @@ const Store = () => {
         <div className="spacer"></div>
       </div>
 
-      
       <div className="progress-container">
         <div className="step-item">
           <div className="step-circle active">1</div>
@@ -297,9 +293,9 @@ const Store = () => {
         </div>
 
         <div className="button-container">
-        <button type="submit" className="next-button">
-          {loading ? 'Saving...' : 'Next'} <IoIosArrowRoundForward size={28} />
-        </button>
+          <button type="submit" className="next-button">
+            Next <IoIosArrowRoundForward size={28} />
+          </button>
         </div>
       </form>
     </div>

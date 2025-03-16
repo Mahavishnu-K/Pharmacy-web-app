@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { account } from '../../../../server/src/appwriteConfig';
+import { account } from './../../../appwriteConfig';
 import icon from '/icon.png'
 import './login.css'
 

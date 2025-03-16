@@ -4,7 +4,7 @@ import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import icon from '/icon.png';
-import { account, databases, ID, DATABASE_ID, COLLECTION_ID } from '../../../../server/src/appwriteConfig';
+import { account, databases, ID, DATABASE_ID, COLLECTION_ID } from './../../../appwriteConfig';
 import { Permission, Role } from 'appwrite';
 import './signup.css';
 

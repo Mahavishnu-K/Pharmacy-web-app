@@ -5,11 +5,21 @@ import Store from './pages/addshop/step1/store'
 import Business from './pages/addshop/step2/business'
 import Package from './pages/addshop/step3/package'
 import Payment from './pages/addshop/step4/payment'
+import { Toaster } from 'react-hot-toast';
 import './App.css'
 
 function App() {
   return (
     <>
+      <Toaster 
+        position="bottom-center" 
+        toastOptions={{
+          duration: 2500,
+          style: {
+            marginBottom: "115px"
+          }
+        }}
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />

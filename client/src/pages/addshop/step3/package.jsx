@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { Toaster, toast } from 'sonner';
-import { databases, account, DATABASE_ID, COLLECTION_ID, Query } from '../../../../../server/src/appwriteConfig';
+import { toast } from 'react-hot-toast';
+import { TbCreditCardPay } from "react-icons/tb";
+import { databases, account, DATABASE_ID, COLLECTION_ID, Query } from './../../../../appwriteConfig';
 import { encryptData, decryptData } from '../../../utils/encryption';
 
 import './package.css';
@@ -133,19 +134,26 @@ const Package = () => {
       setInitialData({ selectedPlan, referralCode });
       setHasChanges(false);
       setDocumentId(response.$id); 
-      navigate('/payment');
+
+      toast(
+        <div style={{display:'flex', gap:'10px', alignItems:'center'}}>
+          <TbCreditCardPay />
+          <span>Proceed to pay</span>
+        </div>
+      );
+
+      setTimeout(() => {
+        navigate('/payment');
+      }, 3000);
+
     } catch (error) {
-      toast.error('Error');
+      toast.error('Failed to proceed');
       console.error('Error saving package details:', error);
-    } finally {
-      toast.success('Proceed to pay');
     }
   };
   
   return (
     <div className="container">
-
-      <Toaster position="bottom-center" />
       
       <div className="header">
         <h1 className="title">Add Shop</h1>
