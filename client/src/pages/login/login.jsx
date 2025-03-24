@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { account } from './../../../appwriteConfig';
+import { encryptData, decryptData } from '../../utils/encryption';
 import icon from '/icon.png'
 import './login.css'
 
@@ -14,28 +15,34 @@ function Login() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    useEffect(()=>{
+        const mail = localStorage.getItem('rem-email');
+        const pass = localStorage.getItem('rem-password');
+        if(mail && pass){
+            const decryptedMail = decryptData(mail);
+            const decryptedPassword = decryptData(pass);
+            setEmail(decryptedMail);
+            setPassword(decryptedPassword);
+            setRememberMe(true);
+        }
+    },[]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
-        try {
-            const currentUser = await account.get();
-            if (currentUser) {
-                console.log('User already logged in:', currentUser);
-                navigate('/store');
-                return; 
-            }
-        } catch (err) {
-            console.log('No active session found. Proceeding with login.');
-        }
-
         try {
             const session = await account.createEmailPasswordSession(email, password);
+            if(rememberMe){
+                localStorage.setItem("rem-email",encryptData(email));
+                localStorage.setItem("rem-password",encryptData(password));
+            }else {
+                localStorage.removeItem("rem-email");
+                localStorage.removeItem("rem-password");
+            }
             console.log('Login successful:', session);
             navigate('/store');
         } catch (err) {
             setError('Invalid credentials. Please try again.');
-            alert('Invalid credentials. Please try again.');
             console.error('Login failed:', err);
         }
     };
@@ -53,7 +60,6 @@ function Login() {
 
                         <h1 className="title">Log in</h1>
                         <p className="subtitle">login to your account</p>
-
                         <form onSubmit={handleSubmit} className='form'>
                             <div className="form-field">
                                 <input
@@ -61,6 +67,7 @@ function Login() {
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                className='email-inp'
                                 placeholder="Enter your email"
                                 required
                                 />
@@ -73,6 +80,7 @@ function Login() {
                                     type={showPassword ? "text" : "password"}
                                     id="password"
                                     value={password}
+                                    className='pass-inp'
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Enter your password"
                                     required

@@ -163,25 +163,40 @@ const Business = () => {
   return (
     <div className="container">
 
-      <div className="header">
-        <h1 className="title">Business Details</h1>
-        <div className="spacer"></div>
-      </div>
-
       <div className="progress-container">
-        <div className="step-item"><div className="step-circle active">1</div></div>
-        <div className="dot active"></div><div className="dot active"></div><div className="dot active"></div>
-        <div className="step-item"><div className="step-circle active">2</div></div>
-        <div className="dot"></div><div className="dot"></div><div className="dot"></div>
-        <div className="step-item"><div className="step-circle">3</div></div>
-        <div className="dot"></div><div className="dot"></div><div className="dot"></div>
-        <div className="step-item"><div className="step-circle">4</div></div>
-      </div>
-      <div className="progress-container-text">
-        <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
-        <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
-        <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
-        <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
+        <div className="header">
+          <h1 className="title">Add Shop</h1>
+        </div>
+        <div className='progress-steps'>
+          <div className="step-item">
+            <div className="step-circle active">1</div>
+          </div>
+          <div className="dot active"></div>
+          <div className="dot active"></div>
+          <div className="dot active"></div>
+          <div className="step-item">
+            <div className="step-circle active">2</div>
+          </div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="step-item">
+            <div className="step-circle">3</div>
+          </div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="step-item">
+            <div className="step-circle">4</div>
+          </div>
+        </div>
+
+        <div className="progress-container-text">
+          <span className="step-label">Store Details</span>
+          <span className="step-label">Business Details</span>
+          <span className="step-label">Package Selection</span>
+          <span className="step-label">Payment</span>
+        </div>
       </div>
 
 
@@ -197,7 +212,7 @@ const Business = () => {
               placeholder="Enter your GST number"
               value={gstNumber}
               onChange={(e) => setGstNumber(e.target.value)}
-              className="form-input"
+              className="form-input-business"
               required
             />
           </div>

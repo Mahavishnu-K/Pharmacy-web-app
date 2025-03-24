@@ -2,6 +2,7 @@
   height: 100vh;
   background-color: white;
   padding: 30px;
+  overflow-y: scroll;
   font-family: "Nunito", sans-serif;
 }
 
@@ -35,51 +36,6 @@
   margin-bottom: 30px;
 }
 
-
-.step-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.step-circle {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background-color: #007bff2e;
-  color: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-family: "Poppins", sans-serif;
-  font-weight: normal;
-}
-
-.step-circle.active {
-  background-color: #007BFF;
-  color: white;
-}
-
-.step-label {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #e6f2ff;
-}
-
-.dot.active{
-  background-color: #007BFF;
-}
-
 /* PlanSelectionOverlay.css */
 .package-container {
   max-width: 400px;
@@ -92,7 +48,14 @@
   margin-bottom: 20px;
 }
 
-label {
+.package-section label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.referral-section label {
   display: block;
   font-size: 16px;
   font-weight: 500;
@@ -160,6 +123,7 @@ label {
   box-sizing: border-box;
   border: 1px solid #ddd;
   border-radius: 5px;
+  margin-bottom: 10px;
   background-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -217,13 +181,14 @@ label {
 
 .future-charge {
   margin-top: 10px;
-  margin-left: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 550;
   font-size: 12px;
   color: #777;
 }
 
-/* Overlay Styles */
 .overlay {
   position: fixed;
   top: 0;
@@ -339,15 +304,13 @@ label {
   margin-top: 10px;
 }
 
-
 .button-container-step-pack {
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  bottom: 50px;
-  left: 42px;
-  gap: 20px;
+  gap: 550px;
+  margin-top: -50px;
+  margin-right: 20px;
 }
 
 .back-button {
@@ -387,4 +350,349 @@ label {
 
 .arrow-icon {
   margin-left: 8px;
+}
+
+@media (max-width: 400px) {
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .spacer {
+    width: 24px;
+  }
+  
+  .progress-container-text-pack{
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    width: 100%;
+    max-width: 800px;
+    font-size: 10px;
+    font-family: "Nunito", sans-serif;
+    margin-top: -5px;
+    margin-bottom: 30px;
+  }
+  
+  .package-container {
+    max-width: 400px;
+    margin: 20px auto;
+    color: #333;
+    position: relative;
+  }
+  
+  .package-section, .referral-section {
+    margin-bottom: 20px;
+  }
+  
+  .package-section label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .referral-section label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .required {
+    color: #ff0000;
+  }
+  
+  .package-card {
+    border: 1px solid #ddd;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .package-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: -5px;
+    text-align: start;
+  }
+  
+  .package-name {
+    font-weight: 500;
+    font-size: 16px;
+    color: #171717;
+  }
+  
+  .package-price {
+    font-size: 14px;
+    font-family: "Roboto Mono", monospace;
+    color: #171717;
+  }
+  
+  .choose-plan-btn {
+    background-color: #335AF2;
+    color: white;
+    border: none;
+    margin-top: -7px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+    height: 40px;
+  }
+  
+  .referral-input {
+    width: 100%;
+    padding: 12px;
+    outline-style: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .referral-input:focus{
+    border-color: #335AF2;
+  }
+  
+  .summary-section {
+    background-color: #e9edf4;
+    border-radius: 8px;
+    margin-top: -12px;
+    padding: 15px 20px;
+  }
+  
+  .summary-title-con{
+    border-bottom: 1px solid #c0c0c0;
+  }
+  
+  .summary-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+  
+  .item-name {
+    color: #555;
+  }
+  
+  .item-price {
+    font-weight: 500;
+  }
+  
+  .discount .item-price {
+    color: #555;
+  }
+  
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #c0c0c0;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .future-charge {
+    margin-top: 10px;
+    margin-left: 28px;
+    font-weight: 550;
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .overlay-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .overlay-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .plan-option {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  
+  .radio-container {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding: 15px;
+    cursor: pointer;
+  }
+  
+  .radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .radio-checkmark {
+    position: relative;
+    top: 2px;
+    height: 20px;
+    width: 20px;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+  
+  .radio-container input:checked ~ .radio-checkmark {
+    border-color: #3366ff;
+  }
+  
+  .radio-container input:checked ~ .radio-checkmark:after {
+    content: "";
+    position: absolute;
+    top: 3.2px;
+    left: 3.4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #3366ff;
+  }
+  
+  .plan-details {
+    flex: 1;
+  }
+  
+  .plan-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  
+  .plan-name {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .plan-price {
+    font-size: 14px;
+  }
+  
+  .plan-features {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .select-plan-btn {
+    background-color: #3366ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .button-container-step-pack {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 20px;
+  }
+  
+  .back-button {
+    width: 140px;
+    height: 40px;
+    background-color: #F5F7FA;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: #171717;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .next-button {
+    width: 140px;
+    height: 40px;
+    background-color: #335AF2;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .arrow-icon-back {
+    margin-right: 8px;
+  }
+  
+  .arrow-icon {
+    margin-left: 8px;
+  }
+  
 }

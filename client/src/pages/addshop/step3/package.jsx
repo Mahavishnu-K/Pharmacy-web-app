@@ -154,48 +154,42 @@ const Package = () => {
   
   return (
     <div className="container">
-      
-      <div className="header">
-        <h1 className="title">Add Shop</h1>
-        <div className="spacer"></div>
+
+      <div className="progress-container">
+        <div className="header">
+          <h1 className="title">Add Shop</h1>
+        </div>
+        <div className='progress-steps'>
+          <div className="step-item">
+            <div className="step-circle active">1</div>
+          </div>
+          <div className="dot active"></div>
+          <div className="dot active"></div>
+          <div className="dot active"></div>
+          <div className="step-item">
+            <div className="step-circle active">2</div>
+          </div>
+          <div className="dot active"></div>
+          <div className="dot active"></div>
+          <div className="dot active"></div>
+          <div className="step-item">
+            <div className="step-circle active">3</div>
+          </div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="step-item">
+            <div className="step-circle">4</div>
+          </div>
+        </div>
+
+        <div className="progress-container-text">
+          <span className="step-label">Store Details</span>
+          <span className="step-label">Business Details</span>
+          <span className="step-label">Package Selection</span>
+          <span className="step-label">Payment</span>
+        </div>
       </div>
-
-        <div className="progress-container">
-            <div className="step-item">
-                <div className="step-circle active">1</div>
-            </div>
-
-            <div className="dot active"></div>
-            <div className="dot active"></div>
-            <div className="dot active"></div>
-
-            <div className="step-item">
-                <div className="step-circle active">2</div>
-            </div>
-            
-            <div className="dot active"></div>
-            <div className="dot active"></div>
-            <div className="dot active"></div>
-            
-            <div className="step-item">
-                <div className="step-circle active">3</div>
-            </div>
-            
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            
-            <div className="step-item">
-                <div className="step-circle">4</div>
-            </div>
-        </div>
-        <div className="progress-container-text-pack">
-          <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
-          <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
-          <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
-          <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
-        </div>
-
       
       <form onSubmit={handleSubmit}>
           <div className="package-container">

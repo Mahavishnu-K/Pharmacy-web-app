@@ -136,168 +136,177 @@ const Store = () => {
   
   return (
     <div className="container">
-
-      <div className="header">
-        <div className="back-button-signup" onClick={() => navigate('/')}>
-          <MdOutlineKeyboardBackspace size={24} />
-        </div>
-        <h1 className="title">Add Shop</h1>
-        <div className="spacer"></div>
-      </div>
-
+      
       <div className="progress-container">
-        <div className="step-item">
-          <div className="step-circle active">1</div>
+        <div className="header">
+          <h1 className="title">Add Shop</h1>
         </div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="step-item">
-          <div className="step-circle">2</div>
-        </div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="step-item">
-          <div className="step-circle">3</div>
-        </div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="step-item">
-          <div className="step-circle">4</div>
-        </div>
-      </div>
-
-      <div className="progress-container-text">
-        <span className="step-label" style={{ marginLeft: "5px" }}>Store Details</span>
-        <span className="step-label" style={{ marginLeft: "5px" }}>Business Details</span>
-        <span className="step-label" style={{ marginLeft: "2px" }}>Package Selection</span>
-        <span className="step-label" style={{ marginTop: "-9px" }}>Payment</span>
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label">
-            Shop Name <span className="required">*</span>
-          </label>
-          <input
-            type="text"
-            name="shopName"
-            placeholder="Enter shop name"
-            value={formData.shopName}
-            onChange={handleChange}
-            className="form-input"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">
-            Address <span className="required">*</span>
-          </label>
-
-          <div className="address-container">
-            <div className="form-field">
-              <input
-                type="text"
-                id="shopNumber"
-                name="shopNumber"
-                placeholder="Enter shop number"
-                value={formData.shopNumber}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="shopNumber">Shop Number <span className="required">*</span></label>
-            </div>
-
-            <div className="form-field">
-              <input
-                type="text"
-                id="streetName"
-                name="streetName"
-                placeholder="Enter street name"
-                value={formData.streetName}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="streetName">Street Name <span className="required">*</span></label>
-            </div>
-
-            <div className="form-field">
-              <input
-                type="text"
-                id="locality"
-                name="locality"
-                placeholder="Enter locality"
-                value={formData.locality}
-                onChange={handleChange}
-              />
-              <label htmlFor="locality">Locality (Optional)</label>
-            </div>
-
-            <div className="two-column">
-              <div className="form-field">
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  placeholder="Enter city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="city">City <span className="required">*</span></label>
-              </div>
-
-              <div className="form-field">
-                <input
-                  type="text"
-                  id="pinCode"
-                  name="pinCode"
-                  placeholder="Enter pin code"
-                  value={formData.pinCode}
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="pinCode">Pin Code <span className="required">*</span></label>
-              </div>
-            </div>
-
-            <div className="form-field">
-              <input
-                type="text"
-                id="state"
-                name="state"
-                placeholder="Enter state"
-                value={formData.state}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="state">State <span className="required">*</span></label>
-            </div>
-
-            <div className="form-field">
-              <input
-                type="text"
-                id="country"
-                name="country"
-                placeholder="Enter country"
-                value={formData.country}
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="country">Country <span className="required">*</span></label>
-            </div>
+        <div className='progress-steps'>
+          <div className="step-item">
+            <div className="step-circle active">1</div>
+          </div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="step-item">
+            <div className="step-circle">2</div>
+          </div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="step-item">
+            <div className="step-circle">3</div>
+          </div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="step-item">
+            <div className="step-circle">4</div>
           </div>
         </div>
 
-        <div className="button-container">
-          <button type="submit" className="next-button">
-            Next <IoIosArrowRoundForward size={28} />
-          </button>
+        <div className="progress-container-text">
+          <span className="step-label">Store Details</span>
+          <span className="step-label">Business Details</span>
+          <span className="step-label">Package Selection</span>
+          <span className="step-label">Payment</span>
         </div>
-      </form>
+      </div>
+
+      <div className='form-container'>
+        <div className='form-wrapper'>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group-store">
+              <label className="form-label">
+                Shop Name <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                name="shopName"
+                placeholder="Enter shop name"
+                value={formData.shopName}
+                onChange={handleChange}
+                className="form-input-store"
+                required
+              />
+            </div>
+
+            <div className="form-group-store">
+              <label className="form-label">
+                Address <span className="required">*</span>
+              </label>
+
+              <div className="address-container">
+                <div className="form-field">
+                  <input
+                    type="text"
+                    id="shopNumber"
+                    name="shopNumber"
+                    placeholder="Enter shop number"
+                    className="form-input-store"
+                    value={formData.shopNumber}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="shopNumber">Shop Number <span className="required">*</span></label>
+                </div>
+
+                <div className="form-field">
+                  <input
+                    type="text"
+                    id="streetName"
+                    name="streetName"
+                    placeholder="Enter street name"
+                    className="form-input-store"
+                    value={formData.streetName}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="streetName">Street Name <span className="required">*</span></label>
+                </div>
+
+                <div className="form-field">
+                  <input
+                    type="text"
+                    id="locality"
+                    name="locality"
+                    placeholder="Enter locality"
+                    className="form-input-store"
+                    value={formData.locality}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="locality">Locality (Optional)</label>
+                </div>
+
+                <div className="two-column">
+                  <div className="form-field">
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      placeholder="Enter city"
+                      className="form-input-store-col"
+                      value={formData.city}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label htmlFor="city">City <span className="required">*</span></label>
+                  </div>
+
+                  <div className="form-field">
+                    <input
+                      type="text"
+                      id="pinCode"
+                      name="pinCode"
+                      placeholder="Enter pin code"
+                      className="form-input-store-col"
+                      value={formData.pinCode}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label htmlFor="pinCode">Pin Code <span className="required">*</span></label>
+                  </div>
+                </div>
+
+                <div className="form-field">
+                  <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    placeholder="Enter state"
+                    className="form-input-store"
+                    value={formData.state}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="state">State <span className="required">*</span></label>
+                </div>
+
+
+                <div className="form-field">
+                  <input
+                    type="text"
+                    id="country"
+                    name="country"
+                    placeholder="Enter country"
+                    className="form-input-store"
+                    value={formData.country}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label htmlFor="country">Country <span className="required">*</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div className="button-container">
+              <button type="submit" className="next-button">
+                Next <IoIosArrowRoundForward size={28} />
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

@@ -17,34 +17,119 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [countryCode, setCountryCode] = useState('+91');
+  
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const navigate = useNavigate();
 
+  const validateFirstName = (value) => {
+    if (!value.trim()) {
+      setFirstNameError('First name is required');
+      return false;
+    } else {
+      setFirstNameError('');
+      return true;
+    }
+  };
+
+  const validateLastName = (value) => {
+    if (!value.trim()) {
+      setLastNameError('Last name is required');
+      return false;
+    } else {
+      setLastNameError('');
+      return true;
+    }
+  };
+
+  const validateEmail = (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!value.trim()) {
+      setEmailError('Email is required');
+      return false;
+    } else if (!emailRegex.test(value)) {
+      setEmailError('Please enter a valid email');
+      return false;
+    } else {
+      setEmailError('');
+      return true;
+    }
+  };
+
+  const validatePhone = (value) => {
+    if (!value) {
+      setPhoneError('Phone number is required');
+      return false;
+    } else {
+      setPhoneError('');
+      return true;
+    }
+  };
+
+  const validatePassword = (value) => {
+    if (!value) {
+      setPasswordError('Password is required');
+      return false;
+    } else if (value.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      return false;
+    } else {
+      setPasswordError('');
+      return true;
+    }
+  };
+
+  const validateConfirmPassword = (value) => {
+    if (!value) {
+      setConfirmPasswordError('Please confirm your password');
+      return false;
+    } else if (value !== password) {
+      setConfirmPasswordError('Passwords do not match');
+      return false;
+    } else {
+      setConfirmPasswordError('');
+      return true;
+    }
+  };
+
+  const validateForm = () => {
+    const isFirstNameValid = validateFirstName(firstName);
+    const isLastNameValid = validateLastName(lastName);
+    const isEmailValid = validateEmail(email);
+    const isPhoneValid = validatePhone(phone);
+    const isPasswordValid = validatePassword(password);
+    const isConfirmPasswordValid = validateConfirmPassword(confirmPassword);
+    
+    return isFirstNameValid && isLastNameValid && isEmailValid && 
+           isPhoneValid && isPasswordValid && isConfirmPasswordValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    
+    setFormSubmitted(true);
+    
+    const isValid = validateForm();
+    
+    if (!isValid) {
+      return;
+    }
+
     setLoading(true);
-
-    if (password.length < 8) {
-      alert("Password must be at least 8 characters!");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match!');
-      setLoading(false);
-      return;
-    }
 
     try {
       const user = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
       console.log('User created:', user);
 
       await account.createEmailPasswordSession(email, password);
-      console.log('User logged in:', user);
 
       await databases.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
         userId: user.$id,
@@ -52,19 +137,24 @@ const Signup = () => {
         lastName,
         email,
         phone
-      }, [
+      },
+      [
         Permission.read(Role.user(user.$id)), 
         Permission.update(Role.user(user.$id)), 
         Permission.delete(Role.user(user.$id))
       ]);
 
-      alert('Signup successful! You are now logged in.');
-      window.location.href = "/"; 
+      navigate('/store')
     } catch (err) {
-      setError(err.message);
       console.error('Signup error:', err);
+      
+      if (err.code === 409) {
+        setEmailError('Email already exists');
+      }
+
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -76,7 +166,6 @@ const Signup = () => {
               <MdOutlineKeyboardBackspace size={24} />
           </div>
         
-
           <div className="logo-container-signup">
             <div className="logo-signup">
               <img src={icon} className="logo-img-signup" alt="pharmacy icon" />
@@ -92,26 +181,28 @@ const Signup = () => {
                 <input
                   type="text"
                   id="first-name"
-                  className='inp'
+                  className={`inp ${firstNameError ? 'error-input' : ''}`}
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="First name"
                   required
                 />
                 <label htmlFor="first-name">First Name</label>
+                {firstNameError && <div className="error-message">{firstNameError}</div>}
               </div>
 
               <div className="form-field-signup half-width-signup">
                 <input
                   type="text"
                   id="last-name"
-                  className='inp'
+                  className={`inp ${lastNameError ? 'error-input' : ''}`}
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Last name"
                   required
                 />
                 <label htmlFor="last-name">Last Name</label>
+                {lastNameError && <div className="error-message">{lastNameError}</div>}
               </div>
             </div>
 
@@ -119,13 +210,14 @@ const Signup = () => {
               <input
                 type="email"
                 id="email"
-                className='inp'
+                className={`inp ${emailError ? 'error-input' : ''}`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter email"
                 required
               />
               <label htmlFor="email">Email</label>
+              {emailError && <div className="error-message">{emailError}</div>}
             </div>
 
             <div className="form-field-signup">
@@ -136,9 +228,11 @@ const Signup = () => {
                   onChange={setPhone}
                   defaultCountry="IN"
                   id="phone"
+                  className={phoneError ? 'error-input' : ''}
                 />
                 <label htmlFor="phone">Phone</label>
               </div>
+              {phoneError && <div className="error-message">{phoneError}</div>}
             </div>
 
             <div className="form-field-signup">
@@ -147,9 +241,8 @@ const Signup = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   value={password}
-                  className='inp'
+                  className={`inp ${passwordError ? 'error-input' : ''}`}
                   onChange={(e) => setPassword(e.target.value)}
-                  minLength={8}
                   placeholder="Enter your password"
                   required
                 />
@@ -170,6 +263,7 @@ const Signup = () => {
                   )}
                 </button>
               </div>
+              {passwordError && <div className="error-message">{passwordError}</div>}
             </div>
 
             <div className="form-field-signup">
@@ -178,9 +272,8 @@ const Signup = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   id="confirm-password"
                   value={confirmPassword}
-                  className='inp'
+                  className={`inp ${confirmPasswordError ? 'error-input' : ''}`}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  minLength={8}
                   placeholder="Confirm your password"
                   required
                 />
@@ -201,6 +294,7 @@ const Signup = () => {
                   )}
                 </button>
               </div>
+              {confirmPasswordError && <div className="error-message">{confirmPasswordError}</div>}
             </div>
 
             <button type="submit" className="login-button-signup" disabled={loading}>
