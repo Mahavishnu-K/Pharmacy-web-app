@@ -31,6 +31,16 @@ function Login() {
         e.preventDefault();
 
         try {
+            
+            try {
+                const sessions = await account.listSessions();
+                for (const session of sessions.sessions) {
+                    await account.deleteSession(session.$id);
+                }
+            } catch (sessionError) {
+                console.log('No active sessions to clear');
+            }
+
             const session = await account.createEmailPasswordSession(email, password);
             if(rememberMe){
                 localStorage.setItem("rem-email",encryptData(email));

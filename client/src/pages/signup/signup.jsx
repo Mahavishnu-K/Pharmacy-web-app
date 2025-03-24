@@ -126,6 +126,16 @@ const Signup = () => {
     setLoading(true);
 
     try {
+
+      try {
+        const sessions = await account.listSessions();
+        for (const session of sessions.sessions) {
+          await account.deleteSession(session.$id);
+        }
+      } catch (sessionError) {
+        console.log('No active sessions to clear');
+      }
+
       const user = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
       console.log('User created:', user);
 
