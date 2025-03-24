@@ -105,25 +105,25 @@ const Payment = () => {
         </div>
         <div className='progress-steps'>
           <div className="step-item">
-            <div className="step-circle active">1</div>
+            <div className="step-circle active" onClick={() => {navigate('/store')}}>1</div>
           </div>
           <div className="dot active"></div>
           <div className="dot active"></div>
           <div className="dot active"></div>
           <div className="step-item">
-            <div className="step-circle active">2</div>
+            <div className="step-circle active" onClick={() => {navigate('/business')}}>2</div>
           </div>
           <div className="dot active"></div>
           <div className="dot active"></div>
           <div className="dot active"></div>
           <div className="step-item">
-            <div className="step-circle active">3</div>
+            <div className="step-circle active" onClick={() => {navigate('/package')}}>3</div>
           </div>
           <div className="dot active"></div>
           <div className="dot active"></div>
           <div className="dot active"></div>
           <div className="step-item">
-            <div className="step-circle active">4</div>
+            <div className="step-circle active" onClick={() => {navigate('/payment')}}>4</div>
           </div>
         </div>
 

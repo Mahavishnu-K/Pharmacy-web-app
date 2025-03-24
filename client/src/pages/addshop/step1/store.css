@@ -90,6 +90,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     font-size: 18px;
     font-family: "Poppins", sans-serif;
     font-weight: normal;
@@ -97,6 +98,7 @@
   
   .step-circle.active {
     background-color: #007BFF;
+    cursor: pointer;
     color: white;
   }
 
@@ -167,8 +169,43 @@
     box-sizing: border-box;
     font-size: 14px;
   }
+
+  .form-input-store-select{
+    width: 400px;
+    max-width: 500px;
+    padding-left: 16px;
+    height: 40px;
+    margin-bottom: 6px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    font-size: 14px;
+  }
   
   .form-input-store:focus {
+    outline: none;
+    border-color: #4169e1;
+  }
+
+  .form-field select.form-input-store-select {
+    width: 100%; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+  }
+
+  .form-input-store-select:focus {
+    outline: none;
+    border-color: #4169e1;
+  }
+
+  .form-input-store-col:focus {
     outline: none;
     border-color: #4169e1;
   }
@@ -357,7 +394,42 @@
     box-sizing: border-box;
     font-size: 14px;
   }
+
+  .form-input-store-select{
+    width: 100%;
+    max-width: 400px;
+    padding-left: 16px;
+    height: 40px;
+    margin-bottom: 6px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .form-field select.form-input-store-select {
+    width: 100%; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+  }
   
+  .form-input-store-select:focus {
+    outline: none;
+    border-color: #4169e1;
+  }
+
+  .form-input-store-col:focus {
+    outline: none;
+    border-color: #4169e1;
+  }
+
   .form-input-store:focus {
     outline: none;
     border-color: #4169e1;

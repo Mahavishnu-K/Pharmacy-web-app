@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { toast } from 'react-hot-toast';
 import { databases, DATABASE_ID, ID, account, Query } from './../../../../appwriteConfig';
@@ -22,8 +21,47 @@ const Store = () => {
     city: '',
     pinCode: '',
     state: '',
-    country: ''
+    country: 'India'
   });
+
+  const indianStates = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,25 +181,25 @@ const Store = () => {
         </div>
         <div className='progress-steps'>
           <div className="step-item">
-            <div className="step-circle active">1</div>
+            <div className="step-circle active" onClick={() => {navigate('/store')}}>1</div>
           </div>
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="step-item">
-            <div className="step-circle">2</div>
+            <div className="step-circle" onClick={() => {navigate('/business')}}>2</div>
           </div>
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="step-item">
-            <div className="step-circle">3</div>
+            <div className="step-circle" onClick={() => {navigate('/package')}}>3</div>
           </div>
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="step-item">
-            <div className="step-circle">4</div>
+            <div className="step-circle" onClick={() => {navigate('/payment')}}>4</div>
           </div>
         </div>
 
@@ -269,19 +307,21 @@ const Store = () => {
                 </div>
 
                 <div className="form-field">
-                  <input
-                    type="text"
+                  <select
                     id="state"
                     name="state"
-                    placeholder="Enter state"
-                    className="form-input-store"
+                    className="form-input-store-select"
                     value={formData.state}
                     onChange={handleChange}
                     required
-                  />
+                  >
+                    <option value="">Select a state</option>
+                    {indianStates.map((state, index) => (
+                      <option key={index} value={state}>{state}</option>
+                    ))}
+                  </select>
                   <label htmlFor="state">State <span className="required">*</span></label>
                 </div>
-
 
                 <div className="form-field">
                   <input
