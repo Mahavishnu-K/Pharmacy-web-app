@@ -14,7 +14,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.png', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.png',  'icons/*.png', 'screenshots/*.png'],
       workbox: {
         runtimeCaching: [
           {

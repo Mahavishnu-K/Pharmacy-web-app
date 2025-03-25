@@ -3,23 +3,22 @@ const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/favicon.png',
+  '/icons/icon-144x144.png',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
+  '/screenshots/android.jpg',
+  '/screenshots/desktop.jpg',
+  '/screenshots/ios.jpg',
   '/manifest.webmanifest',
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .catch((err) => {
-        console.error('Failed to cache assets:', err);
-      })
+      .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+      .then(() => self.skipWaiting()) 
+      .catch((err) => console.error('Pre-caching failed:', err))
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -28,27 +27,46 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log('Deleting old cache:', cache);
             return caches.delete(cache);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim()) 
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+
+  if (request.method !== 'GET') return;
+
+  if (request.url.includes('/api/')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          return response;
+        })
+        .catch(() => caches.match(request)) 
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response; 
-        }
-        return fetch(event.request); 
-      })
-      .catch((err) => {
-        console.error('Fetch failed:', err);
+    caches.match(request)
+      .then((cachedResponse) => {
+        if (cachedResponse) return cachedResponse;
+
+        return fetch(request)
+          .then((response) => {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            return response;
+          })
+          .catch(() => {
+            return null;
+          });
       })
   );
 });
